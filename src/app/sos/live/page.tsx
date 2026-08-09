@@ -8,7 +8,7 @@ import { Motion, AnimatePresence } from "framer-motion";
 function getIconByName(name: string, className: string) {
   const icons: Record<string, React.ComponentType<{ className?: string }>> = {
     MapPulse: () => <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M19.899 9.45c-.293-.04-.597-.065-.895-.065h-.042C17.418 8.321 15 9.694 15 11.75c0 .511.087 1.009.236 1.486l.366 1.156A11.954 11.954 0 0012.088 21c-1.523 0-2.973-.356-4.28-.91l-.367-1.155a11.943 11.943 0 01-2.364-1.486c0-2.056.418-4.029 1.065-5.756l.154-.485a2.002 2.002 0 011.816-.614zm-6.899-4l.366 1.156c-.102.337-.19.66-.254.955l-.32.29a7.93 7.93 0 00-1.02-.61l-.054-.170a7.93 7.93 0 011.02-.61l.32-.29c.064-.295.152-.578.254-.955l.366-1.156a11.952 11.952 0 012.364-1.486 11.952 11.952 0 002.364-1.486zm0 0l.154-.485a2 2 0 00-1.816-.614l-.367-1.155c-.418-1.726-.772-3.489-.91-5.282-.138-1.793-.138-3.585 0-5.378l.154-.485a2.002 2.002 0 001.816-.614z" />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M19.899 9.45c-.293-.04-.597-.065-.895-.065h-.042C17.418 8.321 15 9.694 15 11.75c0 .511.087 1.009.236 1.486l.366 1.156A11.954 11.954 0 0012.088 21c-1.523 0-2.973-.356-4.28-.91l-.367-1.155a11.943 11.943 0 01-2.364-1.486c0-2.056.418-4.029 1.065-5.756l.154-.485a2.002 2.002 0 001.816-.614zm-6.899-4l.366 1.156c-.102.337-.19.66-.254.955l-.32.29a7.93 7.93 0 00-1.02-.61l-.054-.170a7.93 7.93 0 011.02-.61l.32-.29c.064-.295.152-.578.254-.955l.366-1.156a11.952 11.952 0 012.364-1.486 11.952 11.952 0 002.364-1.486zm0 0l.154-.485a2 2 0 00-1.816-.614l-.367-1.155c-.418-1.726-.772-3.489-.91-5.282-.138-1.793-.138-3.585 0-5.378l.154-.485a2.002 2.002 0 001.816-.614z" />
     </svg>,
     UserPlus: () => <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
       <path strokeLinecap="round" strokeLinejoin="round" d="M16 11v2a4 4 0 01-8 0v-2m-1.5 8h3m0-3v3a9 9 0 1018 0v-3m-1.5 8H9a9 9 0 01-9-9v-5a9 9 0 0118 0v5z" />
@@ -148,23 +148,23 @@ export default function LiveSOS() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, ease: [0.43, 0.13, 0.23, 0.96] }}
             >
-              <div className={`bg-${info.color}/10 rounded-2xl p-6 mb-8 border border-${info.color}/20`}>
-                <div className="flex items-center space-x-5">
+              <div className={`bg-${info.color}/10 rounded-3xl p-8 mb-10 border border-${info.color}/20`}>
+                <div className="flex items-center space-x-6">
                   <Motion
                     whileInitiate={{ scale: 0.5 }}
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
                     transition={{ type: "spring", stiffness: 300, damping: 20 }}
                   >
-                    <div className="flex-shrink-0 h-10 w-10 flex items-center justify-center bg-primary/20 rounded-xl">
-                      {getIconByName(info.icon, "h-6 w-6 text-primary")}
+                    <div className="flex-shrink-0 h-12 w-12 flex items-center justify-center bg-primary/20 rounded-full">
+                      {getIconByName(info.icon, "h-7 w-7 text-primary")}
                     </div>
                   </Motion>
                   <div className="flex-1">
-                    <h2 className={`text-2xl font-bold text-${info.color}`}>
+                    <h2 className={`text-3xl font-bold text-${info.color} tracking-tighter`}>
                       {info.title}
                     </h2>
-                    <p className="text-zinc-300 mt-2 max-w-xl">
+                    <p className="text-zinc-300 mt-4 max-w-xl text-lg">
                       {info.description}
                     </p>
                   </div>
@@ -173,15 +173,15 @@ export default function LiveSOS() {
             </Motion>
 
             {/* Responders List */}
-            <section className="mb-8">
-              <h2 className="mb-4 text-lg font-semibold text-white">Nearby Responders</h2>
-              <div className="space-y-5">
+            <section className="mb-10">
+              <h2 className="mb-5 text-lg font-semibold text-white">Nearby Responders</h2>
+              <div className="space-y-6">
                 {isLoading ? (
-                  <div className="flex items-center justify-center py-8">
-                    <Loader2 className="h-5 w-5 animate-spin text-zinc-400" />
+                  <div className="flex items-center justify-center py-10">
+                    <Loader2 className="h-6 w-6 animate-spin text-zinc-400" />
                   </div>
                 ) : responders.length === 0 ? (
-                  <p className="text-zinc-400 text-center py-8">No responders nearby at the moment</p>
+                  <p className="text-zinc-400 text-center py-10">No responders nearby at the moment</p>
                 ) : (
                   <>
                     {responders.map((responder) => (
@@ -191,9 +191,9 @@ export default function LiveSOS() {
                         animate={{ x: 0, opacity: 1 }}
                         transition={{ duration: 0.5 }}
                       >
-                        <div className={`p-5 rounded-2xl border border-zinc-800/30 bg-surface/50 hover:bg-surface/70 transition-colors duration-200`}>
-                          <div className="flex items-center space-x-4">
-                            <div className="flex-shrink-0 h-9 w-9 flex items-center justify-center bg-primary/10 rounded-xl">
+                        <div className="p-6 rounded-2xl border border-zinc-800/30 bg-surface/50 hover:bg-surface/70 transition-colors duration-300 shadow-sm hover:shadow-md">
+                          <div className="flex items-center space-x-5">
+                            <div className="flex-shrink-0 h-10 w-10 flex items-center justify-center bg-primary/10 rounded-xl">
                               {responder.status === "accepting" ? (
                                 <UserPlus className="h-5 w-5 text-primary" />
                               ) : (
@@ -210,9 +210,9 @@ export default function LiveSOS() {
                               </p>
                             </div>
                             <Button
-                              variant={responder.status === "accepting" ? "outline" : "secondary"}
+                              variant="outline"
                               size="sm"
-                              className="h-9 flex items-center justify-center px-4"
+                              className="h-10 flex items-center justify-center px-4"
                               onClick={() => {/* Handle action */}}
                             >
                               {responder.status === "accepting" ? (
@@ -235,21 +235,21 @@ export default function LiveSOS() {
             </section>
 
             {/* Nearby Help */}
-            <section className="mb-8">
-              <h2 className="mb-4 text-lg font-semibold text-white">Nearby Help</h2>
-              <div className="grid md:grid-cols-2 gap-6">
+            <section className="mb-10">
+              <h2 className="mb-5 text-lg font-semibold text-white">Nearby Help</h2>
+              <div className="grid md:grid-cols-2 gap-8">
                 {/* Hospitals */}
                 <Motion
                   initial={{ y: 20, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ duration: 0.5 }}
                 >
-                  <div className="space-y-5">
+                  <div className="space-y-6">
                     <h3 className="font-semibold text-zinc-200">Hospitals</h3>
                     {isLoading ? (
-                      <div className="h-8 w-full bg-zinc-800/30 rounded-lg animate-pulse" />
+                      <div className="h-9 w-full bg-zinc-800/30 rounded-xl animate-pulse" />
                     ) : hospitals.length === 0 ? (
-                      <p className="text-zinc-400 text-center py-4">No hospitals nearby</p>
+                      <p className="text-zinc-400 text-center py-6">No hospitals nearby</p>
                     ) : (
                       <>
                         {hospitals.map((hospital) => (
@@ -259,8 +259,8 @@ export default function LiveSOS() {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.4 }}
                           >
-                            <div className="flex items-center justify-between p-4 rounded-lg border border-zinc-800/20 bg-surface/50 hover:bg-surface/70 transition-colors duration-200">
-                              <div className="flex items-center space-x-3">
+                            <div className="flex items-center justify-between p-5 rounded-xl border border-zinc-800/20 bg-surface/50 hover:bg-surface/70 transition-colors duration-300 shadow-sm hover:shadow-md">
+                              <div className="flex items-center space-x-4">
                                 <MapPulse className="h-4 w-4 text-primary" />
                                 <div>
                                   <h4 className="font-medium text-white">{hospital.name}</h4>
@@ -288,12 +288,12 @@ export default function LiveSOS() {
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ duration: 0.5 }}
                 >
-                  <div className="space-y-5">
+                  <div className="space-y-6">
                     <h3 className="font-semibold text-zinc-200">Police Stations</h3>
                     {isLoading ? (
-                      <div className="h-8 w-full bg-zinc-800/30 rounded-lg animate-pulse" />
+                      <div className="h-9 w-full bg-zinc-800/30 rounded-xl animate-pulse" />
                     ) : police.length === 0 ? (
-                      <p className="text-zinc-400 text-center py-4">No police stations nearby</p>
+                      <p className="text-zinc-400 text-center py-6">No police stations nearby</p>
                     ) : (
                       <>
                         {police.map((station) => (
@@ -303,8 +303,8 @@ export default function LiveSOS() {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.4 }}
                           >
-                            <div className="flex items-center justify-between p-4 rounded-lg border border-zinc-800/20 bg-surface/50 hover:bg-surface/70 transition-colors duration-200">
-                              <div className="flex items-center space-x-3">
+                            <div className="flex items-center justify-between p-5 rounded-xl border border-zinc-800/20 bg-surface/50 hover:bg-surface/70 transition-colors duration-300 shadow-sm hover:shadow-md">
+                              <div className="flex items-center space-x-4">
                                 <ShieldCheck className="h-4 w-4 text-primary" />
                                 <div>
                                   <h4 className="font-medium text-white">{station.name}</h4>
@@ -329,17 +329,17 @@ export default function LiveSOS() {
             </section>
 
             {/* Action Buttons */}
-            <div className="mt-8 space-y-5">
+            <div className="mt-10 space-y-6">
               <Button
                 variant="destructive"
-                className="w-full py-4 text-lg font-medium"
+                className="w-full py-5 text-lg font-medium"
                 onClick={() => {/* End SOS */}}
               >
                 End Emergency
               </Button>
               <Button
                 variant="outline"
-                className="w-full py-4 text-lg font-medium"
+                className="w-full py-5 text-lg font-medium"
                 onClick={() => router.push(`/sos/triage`)}
               >
                 AI Triage
