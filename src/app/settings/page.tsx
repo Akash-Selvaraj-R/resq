@@ -36,12 +36,15 @@ export default function SettingsPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
+      <a href="#settings-content" className="skip-link">
+        Skip to settings
+      </a>
+
       <header className="sticky top-0 z-50 border-b border-white/[0.06] bg-background/80 backdrop-blur-xl">
         <div className="max-w-2xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 text-sm text-zinc-400 hover:text-white transition-colors duration-200"
+            className="inline-flex items-center gap-2 text-sm text-zinc-400 hover:text-white transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring rounded"
           >
             <ArrowLeft className="h-4 w-4" />
             Back
@@ -51,20 +54,20 @@ export default function SettingsPage() {
         </div>
       </header>
 
-      <main className="max-w-2xl mx-auto px-4 sm:px-6 py-6 space-y-6">
+      <main id="settings-content" className="max-w-2xl mx-auto px-4 sm:px-6 py-5 space-y-5">
         {/* Profile */}
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
+          transition={{ duration: 0.2 }}
         >
-          <div className="flex items-center gap-4 p-4 rounded-2xl border border-white/[0.06] bg-white/[0.02]">
-            <div className="w-12 h-12 rounded-xl bg-white/[0.06] border border-white/[0.08] flex items-center justify-center">
-              <User className="h-6 w-6 text-zinc-400" />
+          <div className="flex items-center gap-3.5 p-3.5 rounded-xl border border-white/[0.06] bg-white/[0.02]">
+            <div className="w-10 h-10 rounded-lg bg-white/[0.06] border border-white/[0.08] flex items-center justify-center">
+              <User className="h-5 w-5 text-zinc-400" aria-hidden="true" />
             </div>
             <div className="flex-1">
-              <h2 className="text-sm font-semibold text-white">Alex Rivera</h2>
-              <p className="text-xs text-zinc-500">alex@example.com</p>
+              <h2 className="text-sm font-medium text-white">Alex Rivera</h2>
+              <p className="text-[11px] text-zinc-500">alex@example.com</p>
             </div>
             <Button variant="outline" size="sm" className="h-8 text-xs border-white/[0.08] bg-white/[0.02]">
               Edit
@@ -72,27 +75,26 @@ export default function SettingsPage() {
           </div>
         </motion.div>
 
-        {/* Sections */}
         {sections.map((section, si) => (
           <motion.div
             key={section.title}
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: (si + 1) * 0.08 }}
+            transition={{ duration: 0.2, delay: (si + 1) * 0.06 }}
           >
-            <h3 className="text-xs font-medium text-zinc-500 uppercase tracking-wider mb-2 px-1">{section.title}</h3>
-            <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] divide-y divide-white/[0.04]">
+            <h3 className="section-heading mb-2 px-1">{section.title}</h3>
+            <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] divide-y divide-white/[0.04]">
               {section.items.map((item) => (
                 <div
                   key={item.label}
-                  className="flex items-center gap-3 p-4"
+                  className="flex items-center gap-3 p-3.5"
                 >
-                  <div className="w-8 h-8 rounded-lg bg-white/[0.06] flex items-center justify-center flex-shrink-0">
-                    <item.icon className="h-4 w-4 text-zinc-400" />
+                  <div className="w-7 h-7 rounded-lg bg-white/[0.06] flex items-center justify-center flex-shrink-0">
+                    <item.icon className="h-3.5 w-3.5 text-zinc-400" aria-hidden="true" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm text-white">{item.label}</p>
-                    <p className="text-xs text-zinc-500 truncate">{item.sublabel}</p>
+                    <p className="text-[11px] text-zinc-500 truncate">{item.sublabel}</p>
                   </div>
                   {"toggle" in item && item.toggle && (
                     <Switch
@@ -102,7 +104,7 @@ export default function SettingsPage() {
                     />
                   )}
                   {"action" in item && item.action === "link" && (
-                    <ChevronRight className="h-4 w-4 text-zinc-600" />
+                    <ChevronRight className="h-3.5 w-3.5 text-zinc-600" aria-hidden="true" />
                   )}
                 </div>
               ))}
@@ -110,14 +112,13 @@ export default function SettingsPage() {
           </motion.div>
         ))}
 
-        {/* Logout */}
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3, delay: 0.3 }}
+          transition={{ duration: 0.2, delay: 0.25 }}
         >
-          <button className="w-full flex items-center justify-center gap-2 p-3 rounded-2xl border border-white/[0.06] bg-white/[0.02] text-sm text-zinc-500 hover:text-zinc-300 hover:bg-white/[0.04] transition-colors duration-200">
-            <LogOut className="h-4 w-4" />
+          <button className="w-full flex items-center justify-center gap-2 p-2.5 rounded-xl border border-white/[0.06] bg-white/[0.02] text-sm text-zinc-500 hover:text-zinc-300 hover:bg-white/[0.04] transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring">
+            <LogOut className="h-4 w-4" aria-hidden="true" />
             Sign Out
           </button>
         </motion.div>

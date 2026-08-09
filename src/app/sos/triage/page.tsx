@@ -91,12 +91,15 @@ export default function Triage() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
+      <a href="#triage-content" className="skip-link">
+        Skip to AI triage
+      </a>
+
       <header className="sticky top-0 z-50 border-b border-white/[0.06] bg-background/80 backdrop-blur-xl">
         <div className="max-w-2xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <button
             onClick={() => router.back()}
-            className="inline-flex items-center gap-2 text-sm text-zinc-400 hover:text-white transition-colors duration-200"
+            className="inline-flex items-center gap-2 text-sm text-zinc-400 hover:text-white transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring rounded"
           >
             <ArrowLeft className="h-4 w-4" />
             Back
@@ -106,20 +109,19 @@ export default function Triage() {
         </div>
       </header>
 
-      <main className="max-w-2xl mx-auto px-4 sm:px-6 py-8">
-        {/* Input Section */}
+      <main id="triage-content" className="max-w-2xl mx-auto px-4 sm:px-6 py-6">
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
+          transition={{ duration: 0.25 }}
         >
-          <div className="flex items-center gap-3 mb-5">
+          <div className="flex items-center gap-3 mb-4">
             <div className="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center">
-              <Brain className="h-5 w-5 text-purple-400" />
+              <Brain className="h-5 w-5 text-purple-400" aria-hidden="true" />
             </div>
             <div>
               <h2 className="text-base font-semibold text-white">Describe the Situation</h2>
-              <p className="text-xs text-zinc-500">Our AI will provide an initial assessment and immediate steps.</p>
+              <p className="text-xs text-zinc-500">Get an initial assessment and immediate steps.</p>
             </div>
           </div>
 
@@ -128,73 +130,72 @@ export default function Triage() {
               e.preventDefault();
               if (description.trim()) analyzeDescription();
             }}
-            className="space-y-4"
+            className="space-y-3"
           >
             <div className="relative">
+              <label htmlFor="triage-description" className="sr-only">Describe the emergency situation</label>
               <Textarea
+                id="triage-description"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="Describe what happened or symptoms present..."
-                className="w-full min-h-[140px] rounded-2xl border-white/[0.08] bg-white/[0.02] text-white placeholder:text-zinc-600 focus:border-purple-500/30 focus:ring-0 resize-none text-sm leading-relaxed"
-                rows={5}
+                className="w-full min-h-[120px] rounded-2xl border-white/[0.08] bg-white/[0.02] text-white placeholder:text-zinc-600 focus:border-purple-500/30 focus:ring-0 resize-none text-sm leading-relaxed"
+                rows={4}
+                aria-describedby="char-count"
               />
               {description.length > 0 && (
-                <div className="absolute bottom-3 right-3 text-[10px] text-zinc-600">
-                  {description.length} chars
+                <div id="char-count" className="absolute bottom-3 right-3 text-[10px] text-zinc-600 font-mono" aria-live="polite">
+                  {description.length}
                 </div>
               )}
             </div>
             <Button
               type="submit"
-              className="w-full h-11 bg-white text-zinc-950 hover:bg-white/90 font-medium"
+              className="w-full h-11 bg-white text-zinc-950 hover:bg-white/90 font-medium transition-all duration-150 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               disabled={isAnalyzing || !description.trim()}
             >
               {isAnalyzing ? (
                 <>
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" aria-hidden="true" />
                   Analyzing...
                 </>
               ) : (
                 <>
-                  <Brain className="h-4 w-4 mr-2" />
-                  Get Assessment
+                  <Brain className="h-4 w-4 mr-2" aria-hidden="true" />
+                  Analyze Situation
                 </>
               )}
             </Button>
           </form>
         </motion.div>
 
-        {/* Result */}
         <AnimatePresence>
           {result && config && (
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.4 }}
-              className="mt-8"
+              transition={{ duration: 0.3 }}
+              className="mt-6"
+              role="region"
+              aria-label="AI assessment results"
             >
-              {/* AI Assessment Header */}
-              <div className="flex items-center gap-2 mb-4">
-                <div className="w-6 h-6 rounded-md bg-purple-500/10 flex items-center justify-center">
-                  <Brain className="h-3 w-3 text-purple-400" />
+              <div className="flex items-center gap-2 mb-3">
+                <div className="w-5 h-5 rounded bg-purple-500/10 flex items-center justify-center">
+                  <Brain className="h-3 w-3 text-purple-400" aria-hidden="true" />
                 </div>
-                <span className="text-xs font-medium text-purple-400 uppercase tracking-wider">AI Assessment</span>
-                <span className="text-xs text-zinc-600">Complete</span>
+                <span className="section-heading text-purple-400">AI Assessment Complete</span>
               </div>
 
-              {/* Severity Badge */}
-              <div className={`inline-flex items-center gap-2.5 px-4 py-2 rounded-xl ${config.bg} border ${config.border} mb-5`}>
-                <config.icon className={`h-5 w-5 ${config.color}`} />
-                <div>
-                  <span className={`text-sm font-semibold ${config.color}`}>Severity: {result.severity}</span>
-                </div>
+              <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg ${config.bg} border ${config.border} mb-4`}>
+                <config.icon className={`h-4 w-4 ${config.color}`} aria-hidden="true" />
+                <span className={`text-sm font-semibold ${config.color}`}>Severity: {result.severity}</span>
               </div>
 
-              <div className="p-4 rounded-xl border border-white/[0.06] bg-white/[0.02] mb-5">
-                <div className="flex items-center gap-2 mb-2">
-                  <Shield className="h-4 w-4 text-zinc-400" />
-                  <span className="text-xs font-medium text-zinc-400">Recommended Response</span>
+              <div className="p-3.5 rounded-xl border border-white/[0.06] bg-white/[0.02] mb-4">
+                <div className="flex items-center gap-2 mb-1.5">
+                  <Shield className="h-3.5 w-3.5 text-zinc-400" aria-hidden="true" />
+                  <span className="text-[11px] font-medium text-zinc-400 uppercase tracking-wider">Recommended Response</span>
                 </div>
                 <p className="text-sm text-white font-medium">
                   {result.severity === "Critical" && "Immediate medical attention required"}
@@ -204,20 +205,20 @@ export default function Triage() {
                 </p>
               </div>
 
-              <h3 className="text-xs font-medium text-zinc-500 uppercase tracking-wider mb-3">Assessment Steps</h3>
-              <p className="text-xs text-zinc-600 mb-4">This is an automated assessment. Always follow emergency services instructions.</p>
+              <h3 className="section-heading mb-2">Assessment Steps</h3>
+              <p className="text-[11px] text-zinc-600 mb-3">Automated assessment. Always follow emergency services instructions.</p>
 
-              {/* Steps */}
-              <div className="space-y-2">
+              <div className="space-y-1.5" role="list" aria-label="Recommended steps">
                 {result.steps.map((step, i) => (
                   <motion.div
                     key={i}
                     initial={{ opacity: 0, x: -8 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.3, delay: i * 0.06 }}
-                    className="flex items-start gap-3 p-3.5 rounded-xl border border-white/[0.06] bg-white/[0.02]"
+                    transition={{ duration: 0.2, delay: i * 0.05 }}
+                    className="flex items-start gap-3 p-3 rounded-xl border border-white/[0.06] bg-white/[0.02]"
+                    role="listitem"
                   >
-                    <span className="flex-shrink-0 w-6 h-6 rounded-lg bg-white/[0.06] flex items-center justify-center text-[10px] font-mono text-zinc-500">
+                    <span className="flex-shrink-0 w-5 h-5 rounded bg-white/[0.06] flex items-center justify-center text-[10px] font-mono text-zinc-500" aria-hidden="true">
                       {i + 1}
                     </span>
                     <p className="text-sm text-zinc-300 leading-relaxed">{step}</p>
