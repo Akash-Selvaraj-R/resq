@@ -1,24 +1,18 @@
+"use client";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { MapPulse, UserPlus, ShieldCheck, Phone, Loader2 } from "lucide-react";
-import { Motion } from "framer-motion";
+import { MapPlus, UserPlus, ShieldCheck, Phone, Loader2 } from "lucide-react";
+import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 // Helper to render Lucide icons by name
 function getIconByName(name: string, className: string) {
   const icons: Record<string, React.ComponentType<{ className?: string }>> = {
-    MapPulse: () => <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M19.899 9.45c-.293-.04-.597-.065-.895-.065h-.042C17.418 8.321 15 9.694 15 11.75c0 .511.087 1.009.236 1.486l.366 1.156A11.954 11.954 0 0012.088 21c-1.523 0-2.973-.356-4.28-.91l-.367-1.155a11.943 11.943 0 01-2.364-1.486c0-2.056.418-4.029 1.065-5.756l.154-.485a2.002 2.002 0 001.816-.614zm-6.899-4l.366 1.156c-.102.337-.19.66-.254.955l-.32.29a7.93 7.93 0 00-1.02-.61l-.054-.170a7.93 7.93 0 011.02-.61l.32-.29c.064-.295.152-.578.254-.955l.366-1.156a11.952 11.952 0 012.364-1.486 11.952 11.952 0 002.364-1.486zm0 0l.154-.485a2 2 0 00-1.816-.614l-.367-1.155c-.418-1.726-.772-3.489-.91-5.282-.138-1.793-.138-3.585 0-5.378l.154-.485a2.002 2.002 0 001.816-.614z" />
-    </svg>,
-    UserPlus: () => <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M16 11v2a4 4 0 01-8 0v-2m-1.5 8h3m0-3v3a9 9 0 1018 0v-3m-1.5 8H9a9 9 0 01-9-9v-5a9 9 0 0118 0v5z" />
-    </svg>,
-    ShieldCheck: () => <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4M7.207 8.207a3 3 0 014.242 0m-3.207 5A5.002 5.002 0 0112 5a5.002 5.002 0 016.793 4.293m-1.293-2.293A6.972 6.972 0 0010.505 15.494a6.972 6.972 0 00-4.293 1.707" />
-    </svg>,
-    Phone: () => <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M2 3h2a4 4 0 004 4v10a4 4 0 00-4 4H2a4 4 0 00-4 4V7a4 4 0 004-4zm0 0h2a2 2 0 002 2v6a2 2 0 00-2 2H2a2 2 0 002-2v-6a2 2 0 002-2zm10-1a9 9 0 11-9 9 9 9 0 019-9z" />
-    </svg>,
+    MapPlus,
+    UserPlus,
+    ShieldCheck,
+    Phone,
+    Loader2,
   };
 
   const Icon = icons[name as keyof typeof icons];
@@ -48,7 +42,7 @@ export default function ResponderDashboard() {
             type: "medical",
             name: "Alex Rivera",
             distance: 0.2,
-            status: "alerting",
+            status: "alerting" as const,
             location: { lat: 40.7128, lng: -74.006 },
           },
           {
@@ -56,7 +50,7 @@ export default function ResponderDashboard() {
             type: "safety",
             name: "Sam Chen",
             distance: 0.5,
-            status: "responders-notified",
+            status: "responders-notified" as const,
             location: { lat: 40.713, lng: -74.007 },
           },
           {
@@ -64,7 +58,7 @@ export default function ResponderDashboard() {
             type: "accident",
             name: "Jordan Lee",
             distance: 0.8,
-            status: "help-on-the-way",
+            status: "help-on-the-way" as const,
             location: { lat: 40.714, lng: -74.008 },
           },
         ];
@@ -95,18 +89,18 @@ export default function ResponderDashboard() {
   };
 
   const getTypeInfo = (type: string) => {
-    const types: Record<string, { title: string; icon: keyof typeof icons; color: string }> = {
+    const types: Record<string, { title: string; icon: string; color: string }> = {
       medical: { title: "Medical Emergency", icon: "UserPlus", color: "primary" },
       safety: { title: "Personal Safety", icon: "ShieldCheck", color: "primary" },
-      accident: { title: "Accident", icon: "MapPulse", color: "primary" },
-      fire: { title: "Fire Emergency", icon: "MapPulse", color: "primary" },
+      accident: { title: "Accident", icon: "MapPlus", color: "primary" },
+      fire: { title: "Fire Emergency", icon: "MapPlus", color: "primary" },
       other: { title: "Other Emergency", icon: "UserPlus", color: "primary" },
     };
     return types[type] || types.other;
   };
 
   return (
-    <Motion
+    <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: [0.43, 0.13, 0.23, 0.96] }}
@@ -133,7 +127,7 @@ export default function ResponderDashboard() {
         <main className="flex-1 p-6">
           <div className="max-w-7xl mx-auto">
             {isLoading ? (
-              <Motion
+              <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
@@ -141,24 +135,24 @@ export default function ResponderDashboard() {
                 <div className="flex items-center justify-center py-10">
                   <Loader2 className="h-6 w-6 animate-spin text-zinc-400" />
                 </div>
-              </Motion>
+              </motion.div>
             ) : activeSOS.length === 0 ? (
-              <Motion
+              <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
               >
                 <p className="text-zinc-400 text-center py-10">No active SOS requests at the moment.</p>
-              </Motion>
+              </motion.div>
             ) : (
-              <Motion
+              <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
               >
                 <div className="space-y-6">
                   {activeSOS.map((sos) => (
-                    <Motion
+                    <motion.div
                       key={sos.id}
                       initial={{ x: -20, opacity: 0 }}
                       animate={{ x: 0, opacity: 1 }}
@@ -194,7 +188,7 @@ export default function ResponderDashboard() {
                         <CardContent className="space-y-5">
                           <div className="space-y-3">
                             <div className="flex items-center space-x-4">
-                              <MapPulse className="h-4 w-4 text-primary" />
+                              <MapPlus className="h-4 w-4 text-primary" />
                               <div>
                                 <p className="text-zinc-300">Distance: {sos.distance.toFixed(1)} km</p>
                                 <p className="text-zinc-400 text-sm">
@@ -216,20 +210,20 @@ export default function ResponderDashboard() {
                           </div>
                         </CardContent>
                       </Card>
-                    </Motion>
+                    </motion.div>
                   ))}
                 </div>
-              </Motion>
+              </motion.div>
             )}
           </div>
         </main>
       </div>
-    </Motion>
+    </motion.div>
   );
 }
 
 // Reusable ArrowLeft icon
-function ArrowLeft() {
+function ArrowLeft({ className }: { className?: string }) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -237,7 +231,7 @@ function ArrowLeft() {
       viewBox="0 0 24 24"
       strokeWidth={1.5}
       stroke="currentColor"
-      className="w-4 h-4"
+      className={className}
     >
       <path strokeLinecap="round" strokeLinejoin="round" d="M15 18l-6-6 6-6" />
     </svg>
@@ -245,7 +239,7 @@ function ArrowLeft() {
 }
 
 // Reusable Settings icon
-function Settings() {
+function Settings({ className }: { className?: string }) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -253,7 +247,7 @@ function Settings() {
       viewBox="0 0 24 24"
       strokeWidth={1.5}
       stroke="currentColor"
-      className="w-4 h-4"
+      className={className}
     >
       <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 0121 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h3.375m-3.375 0a59.578 59.578 0 000-6.75v-3.375a60.404 60.404 0 000 6.75H5.25a2.25 2.25 0 01-2.25 2.25z" />
     </svg>

@@ -1,5 +1,6 @@
-import { Motion } from "framer-motion";
-import { HeartPulse, MapPulse, ShieldCheck, UserPlus } from "lucide-react";
+"use client";
+import { motion } from "framer-motion";
+import { HeartPulse, MapPlus, ShieldCheck, UserPlus } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export default function Home() {
@@ -7,7 +8,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      <Motion
+      <motion.div
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.8, ease: [0.43, 0.13, 0.23, 0.96] }}
@@ -22,7 +23,7 @@ export default function Home() {
               contacts and nearby verified responders, shows nearest help, and
               provides AI triage.
             </p>
-            <Motion
+            <motion.button
               initial={{ boxShadow: "0 0 0 0 rgba(225, 29, 72, 0.4)" }}
               animate={{
                 boxShadow: [
@@ -38,19 +39,16 @@ export default function Home() {
               }}
               whileTap={{ scale: 0.95 }}
               whileHover={{ scale: 1.02 }}
+              onClick={() => router.push('/sos/type')}
+              className="w-full lg:w-auto px-8 py-4 text-lg font-semibold rounded-full bg-primary/20 hover:bg-primary/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 disabled:opacity-50 disabled:pointer-events-none"
+              aria-label="Activate SOS"
             >
-              <button
-                onClick={() => router.push('/sos/type')}
-                className="w-full lg:w-auto px-8 py-4 text-lg font-semibold rounded-full bg-primary/20 hover:bg-primary/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 disabled:opacity-50 disabled:pointer-events-none"
-                aria-label="Activate SOS"
-              >
-                <span className="flex-1">Activate SOS</span>
-                <HeartPulse className="ml-2 h-5 w-5" />
-              </button>
-            </Motion>
+              <span className="flex-1">Activate SOS</span>
+              <HeartPulse className="ml-2 h-5 w-5" />
+            </motion.button>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="flex items-center space-x-3">
-                <MapPulse className="h-5 w-5 text-primary" />
+                <MapPlus className="h-5 w-5 text-primary" />
                 <div>
                   <h3 className="font-semibold text-white">Hyperlocal</h3>
                   <p className="text-zinc-400 text-sm">
@@ -79,7 +77,7 @@ export default function Home() {
             </div>
           </div>
         </section>
-      </Motion>
+      </motion.div>
     </div>
   );
 }

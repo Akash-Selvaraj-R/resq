@@ -1,3 +1,4 @@
+"use client";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -9,47 +10,11 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Plus, Trash2, Edit, Phone, Mail } from "lucide-react";
+import { Plus, Trash2, Edit, Phone, Mail, Settings } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Motion } from "framer-motion";
-
-// Helper to render Lucide icons by name
-function getIconByName(name: string, className: string) {
-  const icons: Record<string, React.ComponentType<{ className?: string }>> = {
-    Plus: () => <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-    </svg>,
-    Trash2: () => <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v9m0 0L6 6m0 0l6 6" />
-    </svg>,
-    Edit: () => <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
-    </svg>,
-    Phone: () => <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M2 3h2a4 4 0 004 4v10a4 4 0 00-4 4H2a4 4 0 00-4-4V7a4 4 0 004-4zm0 0h2a2 2 0 002 2v6a2 2 0 00-2 2H2a2 2 0 002-2v-6a2 2 0 002-2zm10-1a9 9 0 11-9 9 9 9 0 019-9z" />
-    </svg>,
-    Mail: () => <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M3 8h18a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2v-10zm0 10a4 4 0 00-8 0 4 4 0 008 0z" />
-    </svg>,
-    Settings: () => <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 0121 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h3.375m-3.375 0a59.578 59.578 0 000-6.75v-3.375a60.404 60.404 0 000 6.75H5.25a2.25 2.25 0 01-2.25 2.25z" />
-    </svg>,
-  };
-
-  const Icon = icons[name as keyof typeof icons];
-  return Icon ? <Icon className={className} /> : null;
-}
+import { motion } from "framer-motion";
 
 export default function Contacts() {
   const [open, setOpen] = useState(false);
@@ -73,7 +38,7 @@ export default function Contacts() {
   };
 
   return (
-    <Motion
+    <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: [0.43, 0.13, 0.23, 0.96] }}
@@ -91,7 +56,7 @@ export default function Contacts() {
         <main className="flex-1 p-6">
           <div className="max-w-7xl mx-auto space-y-6">
             {/* Add Contact Button */}
-            <Motion
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
@@ -101,17 +66,17 @@ export default function Contacts() {
                   <Plus className="mr-2 h-4 w-4" /> Add Contact
                 </Button>
               </div>
-            </Motion>
+            </motion.div>
 
             {/* Contacts List */}
-            <Motion
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.1 }}
             >
               <div className="space-y-4">
                 {contacts.map((contact) => (
-                  <Motion
+                  <motion.div
                     key={contact.id}
                     initial={{ x: -20, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
@@ -128,14 +93,14 @@ export default function Contacts() {
                             <Button
                               variant="outline"
                               size="sm"
-                              onClick={() => {/* Edit contact */}
+                              onClick={() => {/* Edit contact */}}
                             >
                               <Edit className="mr-2 h-3 w-3" /> Edit
                             </Button>
                             <Button
                               variant="destructive"
                               size="sm"
-                              onClick={() => {/* Delete contact */}
+                              onClick={() => {/* Delete contact */}}
                             >
                               <Trash2 className="mr-2 h-3 w-3" /> Delete
                             </Button>
@@ -153,79 +118,55 @@ export default function Contacts() {
                         </div>
                       </CardContent>
                     </Card>
-                  </Motion>
+                  </motion.div>
                 ))}
               </div>
-            </Motion>
+            </motion.div>
           </div>
         </main>
 
         {/* Add Contact Dialog */}
-        <Motion
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-        >
-          <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
-              <Button variant="default">Add Contact</Button>
-            </DialogTrigger>
-            <DialogContent className="w-full max-w-md sm:max-w-lg">
-              <DialogHeader>
-                <DialogTitle>Add Emergency Contact</DialogTitle>
-                <DialogDescription>
-                  Add a new contact to be notified in case of an emergency.
-                </DialogDescription>
-              </DialogHeader>
+        <Dialog open={open} onOpenChange={setOpen}>
+          <DialogTrigger render={<Button variant="default" />}>
+            Add Contact
+          </DialogTrigger>
+          <DialogContent className="w-full max-w-md sm:max-w-lg">
+            <DialogHeader>
+              <DialogTitle>Add Emergency Contact</DialogTitle>
+              <DialogDescription>
+                Add a new contact to be notified in case of an emergency.
+              </DialogDescription>
+            </DialogHeader>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="contact-name">Full Name</Label>
+                <Input
+                  id="contact-name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Enter full name"
+                  className="w-full"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="contact-phone">Phone Number</Label>
+                <Input
+                  id="contact-phone"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  placeholder="Enter phone number"
+                  className="w-full"
+                />
+              </div>
               <DialogFooter>
-                <Form onSubmit={handleSubmit}>
-                  <FormControl>
-                    <FormField
-                      control={{ name: "", onChange: (e: any) => setName(e.target.value), value: name }}
-                      render={({ field }) => (
-                        <>
-                          <FormItem>
-                            <FormLabel>Full Name</FormLabel>
-                            <Input
-                              {...field}
-                              placeholder="Enter full name"
-                              className="w-full"
-                            />
-                            <FormMessage />
-                          </FormItem>
-                        </>
-                      )}
-                    />
-                    <FormField
-                      control={{
-                        name: "",
-                        onChange: (e: any) => setPhone(e.target.value),
-                        value: phone,
-                      }}
-                      render={({ field }) => (
-                        <>
-                          <FormItem>
-                            <FormLabel>Phone Number</FormLabel>
-                            <Input
-                              {...field}
-                              placeholder="Enter phone number"
-                              className="w-full"
-                            />
-                            <FormMessage />
-                          </FormItem>
-                        </>
-                      )}
-                    />
-                    <Button type="submit" className="w-full mt-4">
-                      Save Contact
-                    </Button>
-                  </FormControl>
-                </Form>
+                <Button type="submit" className="w-full">
+                  Save Contact
+                </Button>
               </DialogFooter>
-            </DialogContent>
-          </Dialog>
-        </Motion>
+            </form>
+          </DialogContent>
+        </Dialog>
       </div>
-    </Motion>
+    </motion.div>
   );
 }

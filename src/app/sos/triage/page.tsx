@@ -1,9 +1,10 @@
+"use client";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { AlertTriangle, CheckCircle2, Activity } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 
 // Helper to render Lucide icons by name
@@ -101,7 +102,7 @@ export default function Triage() {
   };
 
   return (
-    <Motion
+    <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: [0.43, 0.13, 0.23, 0.96] }}
@@ -109,7 +110,7 @@ export default function Triage() {
       <div className="min-h-screen bg-background flex flex-col">
         <header className="bg-surface/50 backdrop-blur-sm border-b border-zinc-800/20 px-6 py-4">
           <div className="max-w-7xl mx-auto flex justify-between items-center">
-            <Button variant="outline" size="icon" onClick={() => router.push(-1)}>
+            <Button variant="outline" size="icon" onClick={() => router.back()}>
               <ArrowLeft className="h-4 w-4" /> Back
             </Button>
             <h1 className="text-xl font-semibold text-white">AI Triage Assistant</h1>
@@ -118,7 +119,7 @@ export default function Triage() {
 
         <main className="flex-1 p-6">
           <div className="max-w-7xl mx-auto">
-            <Motion
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, ease: [0.43, 0.13, 0.23, 0.96] }}
@@ -147,8 +148,7 @@ export default function Triage() {
                     onChange={(e) => setDescription(e.target.value)}
                     placeholder="Describe the emergency situation (e.g., chest pain, bleeding, fall, etc.)..."
                     className="w-full"
-                    minRows={5}
-                    maxRows={8}
+                    rows={5}
                   />
                 </div>
                 <Button
@@ -161,7 +161,7 @@ export default function Triage() {
               </form>
 
               {result && (
-                <Motion
+                <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.2 }}
@@ -192,7 +192,7 @@ export default function Triage() {
                       <h3 className="font-semibold text-zinc-200 mb-4">Immediate Steps:</h3>
                       <div className="space-y-3">
                         {result.steps.map((step, index) => (
-                          <Motion
+                          <motion.div
                             key={index}
                             initial={{ opacity: 0, x: -10 }}
                             animate={{ opacity: 1, x: 0 }}
@@ -202,23 +202,23 @@ export default function Triage() {
                               <CheckCircle2 className="h-4 w-4 mt-1 text-primary flex-shrink-0" />
                               <p className="text-zinc-300">{step}</p>
                             </div>
-                          </Motion>
+                          </motion.div>
                         ))}
                       </div>
                     </CardContent>
                   </Card>
-                </Motion>
+                </motion.div>
               )}
-            </Motion>
+            </motion.div>
           </div>
         </main>
       </div>
-    </Motion>
+    </motion.div>
   );
 }
 
 // Reusable ArrowLeft icon
-function ArrowLeft() {
+function ArrowLeft({ className }: { className?: string }) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -226,7 +226,7 @@ function ArrowLeft() {
       viewBox="0 0 24 24"
       strokeWidth={1.5}
       stroke="currentColor"
-      className="w-4 h-4"
+      className={className}
     >
       <path strokeLinecap="round" strokeLinejoin="round" d="M15 18l-6-6 6-6" />
     </svg>

@@ -1,9 +1,9 @@
+"use client";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { Button } from "@/components/ui/button";
-import { AlertCircle, HeartPulse, MapPulse } from "lucide-react";
-import { Motion } from "framer-motion";
-import { useRouter } from "next/navigation";
+import { AlertCircle, HeartPulse, ArrowLeft } from "lucide-react";
+import { motion } from "framer-motion";
 
 // Helper to render Lucide icons by name
 function getIconByName(name: string, className: string) {
@@ -17,17 +17,16 @@ function getIconByName(name: string, className: string) {
   return Icon ? <Icon className={className} /> : null;
 }
 
-export default function ConfirmSOS() {
+function ConfirmSOSContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const type = searchParams.get("type") || "medical";
   const [isConfirmed, setIsConfirmed] = useState(false);
   const [countdown, setCountdown] = useState(5);
 
-  // Map type to display name and icon
   const typeInfo: Record<
     string,
-    { title: string; description: string; icon: keyof typeof icons }
+    { title: string; description: string; icon: string }
   > = {
     medical: {
       title: "Medical Emergency",
@@ -68,17 +67,18 @@ export default function ConfirmSOS() {
     }
   }, [isConfirmed, countdown]);
 
-  if (isConfirmed) {
-    // Simulate sending SOS and redirect to live page after a short delay
-    useEffect(() => {
+  useEffect(() => {
+    if (isConfirmed) {
       const timer = setTimeout(() => {
         router.push(`/sos/live?type=${type}`);
       }, 1500);
       return () => clearTimeout(timer);
-    }, []);
+    }
+  }, [isConfirmed, router, type]);
 
+  if (isConfirmed) {
     return (
-      <Motion
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: [0.43, 0.13, 0.23, 0.96] }}
@@ -87,8 +87,9 @@ export default function ConfirmSOS() {
           <section className="flex-1 flex items-center justify-center px-6 py-12 text-center">
             <div className="space-y-8">
               <div className="flex items-center justify-center space-x-6">
-                <Motion
-                  whileInitiate={{ scale: 0.5 }}
+                <motion.div
+                  initial={{ scale: 0.5 }}
+                  animate={{ scale: 1 }}
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                   transition={{ type: "spring", stiffness: 300, damping: 20 }}
@@ -97,8 +98,8 @@ export default function ConfirmSOS() {
                     <div className="absolute inset-0 bg-primary/20" />
                     <HeartPulse className="h-8 w-8 text-primary" />
                   </div>
-                </Motion>
-                <Motion
+                </motion.div>
+                <motion.div
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.6, delay: 0.2 }}
@@ -112,17 +113,17 @@ export default function ConfirmSOS() {
                       Help is on the way.
                     </p>
                   </div>
-                </Motion>
+                </motion.div>
               </div>
             </div>
           </section>
         </div>
-      </Motion>
+      </motion.div>
     );
   }
 
   return (
-    <Motion
+    <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: [0.43, 0.13, 0.23, 0.96] }}
@@ -139,15 +140,16 @@ export default function ConfirmSOS() {
 
         <main className="flex-1 p-6">
           <div className="max-w-7xl mx-auto">
-            <Motion
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, ease: [0.43, 0.13, 0.23, 0.96] }}
             >
               <div className="space-y-8">
                 <div className="flex items-center justify-center space-x-6">
-                  <Motion
-                    whileInitiate={{ scale: 0.5 }}
+                  <motion.div
+                    initial={{ scale: 0.5 }}
+                    animate={{ scale: 1 }}
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
                     transition={{ type: "spring", stiffness: 300, damping: 20 }}
@@ -158,8 +160,8 @@ export default function ConfirmSOS() {
                         {countdown}
                       </div>
                     </div>
-                  </Motion>
-                  <Motion
+                  </motion.div>
+                  <motion.div
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.6, delay: 0.2 }}
@@ -172,10 +174,10 @@ export default function ConfirmSOS() {
                         {info.description}
                       </p>
                     </div>
-                  </Motion>
+                  </motion.div>
                 </div>
 
-                <Motion
+                <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.4 }}
@@ -187,9 +189,9 @@ export default function ConfirmSOS() {
                   >
                     Confirm and Send SOS
                   </Button>
-                </Motion>
+                </motion.div>
 
-                <Motion
+                <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.5 }}
@@ -197,34 +199,28 @@ export default function ConfirmSOS() {
                   <Button
                     variant="outline"
                     className="w-full py-3 text-lg font-medium"
-                    asChild
+                    onClick={() => router.push("/sos/type")}
                   >
-                    <a href="/sos/type" className="flex items-center justify-center w-full">
-                      <ArrowLeft className="mr-2 h-4 w-4" /> Change Type
-                    </a>
+                    <ArrowLeft className="mr-2 h-4 w-4" /> Change Type
                   </Button>
-                </Motion>
+                </motion.div>
               </div>
-            </Motion>
+            </motion.div>
           </div>
         </main>
       </div>
-    </Motion>
+    </motion.div>
   );
 }
 
-// Reusable ArrowLeft icon
-function ArrowLeft() {
+export default function ConfirmSOS() {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-      strokeWidth={1.5}
-      stroke="currentColor"
-      className="w-4 h-4"
-    >
-      <path strokeLinecap="round" strokeLinejoin="round" d="M15 18l-6-6 6-6" />
-    </svg>
+    <Suspense fallback={
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-zinc-400">Loading...</div>
+      </div>
+    }>
+      <ConfirmSOSContent />
+    </Suspense>
   );
 }
