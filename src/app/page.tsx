@@ -1,8 +1,10 @@
-import { Button } from "@/components/ui/button";
 import { Motion } from "framer-motion";
 import { HeartPulse, MapPulse, ShieldCheck, UserPlus } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const router = useRouter();
+
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <Motion
@@ -20,16 +22,32 @@ export default function Home() {
               contacts and nearby verified responders, shows nearest help, and
               provides AI triage.
             </p>
-            <Button
-              className="w-full lg:w-auto px-8 py-4 text-lg"
-              variant="default"
-              asChild
+            <Motion
+              initial={{ boxShadow: "0 0 0 0 rgba(225, 29, 72, 0.4)" }}
+              animate={{
+                boxShadow: [
+                  "0 0 0 0 rgba(225, 29, 72, 0.4)",
+                  "0 0 0 8px rgba(225, 29, 72, 0)",
+                  "0 0 0 0 rgba(225, 29, 72, 0.4)"
+                ]
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+              whileTap={{ scale: 0.95 }}
+              whileHover={{ scale: 1.02 }}
             >
-              <a href="/sos/type" className="flex items-center justify-center w-full h-full">
+              <button
+                onClick={() => router.push('/sos/type')}
+                className="w-full lg:w-auto px-8 py-4 text-lg font-semibold rounded-full bg-primary/20 hover:bg-primary/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 disabled:opacity-50 disabled:pointer-events-none"
+                aria-label="Activate SOS"
+              >
                 <span className="flex-1">Activate SOS</span>
                 <HeartPulse className="ml-2 h-5 w-5" />
-              </a>
-            </Button>
+              </button>
+            </Motion>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="flex items-center space-x-3">
                 <MapPulse className="h-5 w-5 text-primary" />

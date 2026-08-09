@@ -2,10 +2,30 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { AlertTriangle, CheckCircle2, Activity } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Motion } from "framer-motion";
+import { useRouter } from "next/navigation";
+
+// Helper to render Lucide icons by name
+function getIconByName(name: string, className: string) {
+  const icons: Record<string, React.ComponentType<{ className?: string }>> = {
+    AlertTriangle: () => <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </svg>,
+    CheckCircle2: () => <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-5.618 4.016M12 20a8 8 0 100-16 8 8 0 000 16z" />
+    </svg>,
+    Activity: () => <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M20 12a7.93 7.93 0 00-4.64-3.23A5.92 5.92 0 0010 9H8a5.92 5.92 0 000 11.59c0 .308.01.613.03.916a5.09 5.09 0 013.29 2.91c.995-.068 1.981-.031 2.953-.08a5.06 5.06 0 015.05 3.82" />
+    </svg>,
+  };
+
+  const Icon = icons[name as keyof typeof icons];
+  return Icon ? <Icon className={className} /> : null;
+}
 
 export default function Triage() {
+  const router = useRouter();
   const [description, setDescription] = useState("");
   const [result, setResult] = useState<{ severity: string; steps: string[] } | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -81,99 +101,119 @@ export default function Triage() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <header className="bg-surface/50 backdrop-blur-sm border-b border-zinc-800/20 px-6 py-4">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <h1 className="text-xl font-semibold text-white">AI Triage Assistant</h1>
-          <Button variant="outline" size="icon" aria-label="Back to Emergency">
-            <ArrowLeft className="h-4 w-4" onClick={() => {/* Go back to live SOS */}} />
-          </Button>
-        </div>
-      </header>
-
-      <main className="flex-1 p-6">
-        <div className="max-w-7xl mx-auto">
-          <form className="space-y-6" onSubmit={(e) => {
-            e.preventDefault();
-            if (description.trim()) {
-              analyzeDescription();
-            }
-          }}>
-            <div className="space-y-4">
-              <div className="flex items-center space-x-3">
-                <Activity className="h-5 w-5 text-primary" />
-                <div>
-                  <h2 className="font-semibold text-white">Describe the Situation</h2>
-                  <p className="text-zinc-300 text-sm">
-                    Briefly describe what happened or what symptoms are present.
-                    Our AI will provide an initial assessment and immediate steps.
-                  </p>
-                </div>
-              </div>
-              <Textarea
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                placeholder="Describe the emergency situation (e.g., chest pain, bleeding, fall, etc.)..."
-                className="w-full"
-                minRows={4}
-                maxRows={6}
-              />
-            </div>
-            <Button
-              type="submit"
-              className="w-full"
-              disabled={isAnalyzing || !description.trim()}
-            >
-              {isAnalyzing ? "Analyzing..." : "Get Triage Assessment"}
+    <Motion
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, ease: [0.43, 0.13, 0.23, 0.96] }}
+    >
+      <div className="min-h-screen bg-background flex flex-col">
+        <header className="bg-surface/50 backdrop-blur-sm border-b border-zinc-800/20 px-6 py-4">
+          <div className="max-w-7xl mx-auto flex justify-between items-center">
+            <Button variant="outline" size="icon" onClick={() => router.push(-1)}>
+              <ArrowLeft className="h-4 w-4" /> Back
             </Button>
-          </form>
+            <h1 className="text-xl font-semibold text-white">AI Triage Assistant</h1>
+          </div>
+        </header>
 
-          {result && (
+        <main className="flex-1 p-6">
+          <div className="max-w-7xl mx-auto">
             <Motion
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.5 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, ease: [0.43, 0.13, 0.23, 0.96] }}
             >
-              <Card className="border-border">
-                <CardHeader>
-                  <div className="flex items-center space-x-3">
-                    {result.severity === "Critical" ? (
-                      <AlertTriangle className="h-5 w-5 text-red-400" />
-                    ) : result.severity === "High" ? (
-                      <AlertTriangle className="h-5 w-5 text-orange-400" />
-                    ) : result.severity === "Medium" ? (
-                      <Activity className="h-5 w-5 text-yellow-400" />
-                    ) : (
-                      <CheckCircle2 className="h-5 w-5 text-green-400" />
-                    )}
+              <form className="space-y-7" onSubmit={(e) => {
+                e.preventDefault();
+                if (description.trim()) {
+                  analyzeDescription();
+                }
+              }}>
+                <div className="space-y-5">
+                  <div className="flex items-center space-x-4">
+                    <Activity className="h-6 w-6 text-primary" />
                     <div>
-                      <h2 className="text-white font-semibold">Assessment: {result.severity}</h2>
-                      <p className="text-zinc-300 text-sm">
-                        This is an automated assessment. Always follow emergency services instructions.
+                      <h2 className="text-2xl font-semibold text-white">
+                        Describe the Situation
+                      </h2>
+                      <p className="text-zinc-300 mt-2">
+                        Briefly describe what happened or what symptoms are present.
+                        Our AI will provide an initial assessment and immediate steps.
                       </p>
                     </div>
                   </div>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <h3 className="font-semibold text-zinc-200">Immediate Steps:</h3>
-                  <div className="space-y-3">
-                    {result.steps.map((step, index) => (
-                      <div key={index} className="flex items-start space-x-3">
-                        <CheckCircle2 className="h-3 w-3 mt-1 text-primary flex-shrink-0" />
-                        <p className="text-zinc-300">{step}</p>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            </Motion>
-          )}
-        </div>
-      </main>
+                  <Textarea
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    placeholder="Describe the emergency situation (e.g., chest pain, bleeding, fall, etc.)..."
+                    className="w-full"
+                    minRows={5}
+                    maxRows={8}
+                  />
+                </div>
+                <Button
+                  type="submit"
+                  className="w-full py-4 text-lg font-medium"
+                  disabled={isAnalyzing || !description.trim()}
+                >
+                  {isAnalyzing ? "Analyzing..." : "Get Triage Assessment"}
+                </Button>
+              </form>
 
-      {/* Reusable ArrowLeft icon - positioned at bottom left for mobile */}
-      <ArrowLeft className="fixed bottom-4 left-4 h-5 w-5 text-zinc-400" onClick={() => {/* Go back to live SOS */}} />
-    </div>
+              {result && (
+                <Motion
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.2 }}
+                >
+                  <Card className="border-border">
+                    <CardHeader className="pb-4">
+                      <div className="flex items-center space-x-4">
+                        {result.severity === "Critical" ? (
+                          <AlertTriangle className="h-6 w-6 text-red-400" />
+                        ) : result.severity === "High" ? (
+                          <AlertTriangle className="h-6 w-6 text-orange-400" />
+                        ) : result.severity === "Medium" ? (
+                          <Activity className="h-6 w-6 text-yellow-400" />
+                        ) : (
+                          <CheckCircle2 className="h-6 w-6 text-green-400" />
+                        )}
+                        <div>
+                          <h2 className="text-2xl font-bold text-white">
+                            Assessment: {result.severity}
+                          </h2>
+                          <p className="text-zinc-300 mt-2">
+                            This is an automated assessment. Always follow emergency services instructions.
+                          </p>
+                        </div>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <h3 className="font-semibold text-zinc-200 mb-4">Immediate Steps:</h3>
+                      <div className="space-y-3">
+                        {result.steps.map((step, index) => (
+                          <Motion
+                            key={index}
+                            initial={{ opacity: 0, x: -10 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.4, delay: index * 0.08 }}
+                          >
+                            <div className="flex items-start space-x-4">
+                              <CheckCircle2 className="h-4 w-4 mt-1 text-primary flex-shrink-0" />
+                              <p className="text-zinc-300">{step}</p>
+                            </div>
+                          </Motion>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Motion>
+              )}
+            </Motion>
+          </div>
+        </main>
+      </div>
+    </Motion>
   );
 }
 
