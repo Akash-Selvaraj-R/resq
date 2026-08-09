@@ -2,28 +2,16 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { AlertTriangle, CheckCircle2, Activity } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { motion } from "framer-motion";
+import { ArrowLeft, AlertTriangle, CheckCircle2, Activity, Loader2, Brain, Shield } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 
-// Helper to render Lucide icons by name
-function getIconByName(name: string, className: string) {
-  const icons: Record<string, React.ComponentType<{ className?: string }>> = {
-    AlertTriangle: () => <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-    </svg>,
-    CheckCircle2: () => <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-5.618 4.016M12 20a8 8 0 100-16 8 8 0 000 16z" />
-    </svg>,
-    Activity: () => <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M20 12a7.93 7.93 0 00-4.64-3.23A5.92 5.92 0 0010 9H8a5.92 5.92 0 000 11.59c0 .308.01.613.03.916a5.09 5.09 0 013.29 2.91c.995-.068 1.981-.031 2.953-.08a5.06 5.06 0 015.05 3.82" />
-    </svg>,
-  };
-
-  const Icon = icons[name as keyof typeof icons];
-  return Icon ? <Icon className={className} /> : null;
-}
+const severityConfig: Record<string, { color: string; bg: string; border: string; icon: typeof AlertTriangle }> = {
+  Critical: { color: "text-red-400", bg: "bg-red-500/10", border: "border-red-500/20", icon: AlertTriangle },
+  High: { color: "text-orange-400", bg: "bg-orange-500/10", border: "border-orange-500/20", icon: AlertTriangle },
+  Medium: { color: "text-yellow-400", bg: "bg-yellow-500/10", border: "border-yellow-500/20", icon: Activity },
+  Low: { color: "text-green-400", bg: "bg-green-500/10", border: "border-green-500/20", icon: CheckCircle2 },
+};
 
 export default function Triage() {
   const router = useRouter();
@@ -33,10 +21,8 @@ export default function Triage() {
 
   const analyzeDescription = async () => {
     setIsAnalyzing(true);
-    // Simulate AI analysis delay
     await new Promise((resolve) => setTimeout(resolve, 1500));
 
-    // Mock AI response based on keywords
     const lowerDesc = description.toLowerCase();
     let severity: string;
     let steps: string[];
@@ -47,26 +33,26 @@ export default function Triage() {
         "Call emergency services immediately if not already done",
         "Have the person sit down, rest, and try to stay calm",
         "Loosen any tight clothing",
-        "If the person has prescribed chest medication (like nitroglycerin), help them take it",
-        "If the person becomes unconscious, be prepared to perform CPR"
+        "If prescribed chest medication is available, help them take it",
+        "If the person becomes unconscious, be prepared to perform CPR",
       ];
     } else if (lowerDesc.includes("bleeding") || lowerDesc.includes("cut") || lowerDesc.includes("wound")) {
       severity = "High";
       steps = [
         "Apply direct pressure to the wound with a clean cloth",
         "Elevate the injured area above the heart if possible",
-        "If bleeding doesn't stop with direct pressure, apply a tourniquet above the wound (if trained)",
+        "If bleeding doesn't stop, apply a tourniquet above the wound (if trained)",
         "Seek medical attention immediately",
-        "Keep the person warm and still"
+        "Keep the person warm and still",
       ];
     } else if (lowerDesc.includes("fire") || lowerDesc.includes("smoke")) {
       severity = "Critical";
       steps = [
         "Evacuate the area immediately",
         "Call emergency services from a safe location",
-        "Do not re-enter the building until declared safe by firefighters",
-        "If clothing catches fire, stop, drop, and roll",
-        "Cover nose and mouth with a cloth to reduce smoke inhalation"
+        "Do not re-enter until declared safe by firefighters",
+        "If clothing catches fire: stop, drop, and roll",
+        "Cover nose and mouth to reduce smoke inhalation",
       ];
     } else if (lowerDesc.includes("unconscious") || lowerDesc.includes("unresponsive")) {
       severity = "Critical";
@@ -74,26 +60,26 @@ export default function Triage() {
         "Check for responsiveness and breathing",
         "If not breathing, begin CPR if trained",
         "Call emergency services immediately",
-        "If breathing normally, place in recovery position and monitor",
-        "Do not give anything to eat or drink"
+        "If breathing normally, place in recovery position",
+        "Do not give anything to eat or drink",
       ];
     } else if (lowerDesc.includes("fall") || lowerDesc.includes("injury") || lowerDesc.includes("pain")) {
       severity = "Medium";
       steps = [
-        "Do not move the person if you suspect spinal injury",
+        "Do not move the person if spinal injury is suspected",
         "Check for consciousness and breathing",
         "Apply ice to swollen areas (if no open wound)",
         "Immobilize the injured area",
-        "Seek medical attention to rule out fractures or internal injury"
+        "Seek medical attention to rule out fractures",
       ];
     } else {
       severity = "Low";
       steps = [
         "Monitor the situation closely",
-        "Provide basic first aid if needed and you are trained",
+        "Provide basic first aid if trained",
         "Encourage the person to rest and stay hydrated",
         "If symptoms worsen, seek medical attention",
-        "Keep emergency services updated on any changes"
+        "Keep emergency services updated on changes",
       ];
     }
 
@@ -101,134 +87,147 @@ export default function Triage() {
     setIsAnalyzing(false);
   };
 
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, ease: [0.43, 0.13, 0.23, 0.96] }}
-    >
-      <div className="min-h-screen bg-background flex flex-col">
-        <header className="bg-surface/50 backdrop-blur-sm border-b border-zinc-800/20 px-6 py-4">
-          <div className="max-w-7xl mx-auto flex justify-between items-center">
-            <Button variant="outline" size="icon" onClick={() => router.back()}>
-              <ArrowLeft className="h-4 w-4" /> Back
-            </Button>
-            <h1 className="text-xl font-semibold text-white">AI Triage Assistant</h1>
-          </div>
-        </header>
+  const config = result ? severityConfig[result.severity] || severityConfig.Low : null;
 
-        <main className="flex-1 p-6">
-          <div className="max-w-7xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, ease: [0.43, 0.13, 0.23, 0.96] }}
-            >
-              <form className="space-y-7" onSubmit={(e) => {
-                e.preventDefault();
-                if (description.trim()) {
-                  analyzeDescription();
-                }
-              }}>
-                <div className="space-y-5">
-                  <div className="flex items-center space-x-4">
-                    <Activity className="h-6 w-6 text-primary" />
-                    <div>
-                      <h2 className="text-2xl font-semibold text-white">
-                        Describe the Situation
-                      </h2>
-                      <p className="text-zinc-300 mt-2">
-                        Briefly describe what happened or what symptoms are present.
-                        Our AI will provide an initial assessment and immediate steps.
-                      </p>
-                    </div>
-                  </div>
-                  <Textarea
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                    placeholder="Describe the emergency situation (e.g., chest pain, bleeding, fall, etc.)..."
-                    className="w-full"
-                    rows={5}
-                  />
+  return (
+    <div className="min-h-screen bg-background">
+      {/* Header */}
+      <header className="sticky top-0 z-50 border-b border-white/[0.06] bg-background/80 backdrop-blur-xl">
+        <div className="max-w-2xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
+          <button
+            onClick={() => router.back()}
+            className="inline-flex items-center gap-2 text-sm text-zinc-400 hover:text-white transition-colors duration-200"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back
+          </button>
+          <h1 className="text-sm font-medium text-white">AI Triage</h1>
+          <div className="w-12" />
+        </div>
+      </header>
+
+      <main className="max-w-2xl mx-auto px-4 sm:px-6 py-8">
+        {/* Input Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+        >
+          <div className="flex items-center gap-3 mb-5">
+            <div className="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center">
+              <Brain className="h-5 w-5 text-purple-400" />
+            </div>
+            <div>
+              <h2 className="text-base font-semibold text-white">Describe the Situation</h2>
+              <p className="text-xs text-zinc-500">Our AI will provide an initial assessment and immediate steps.</p>
+            </div>
+          </div>
+
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (description.trim()) analyzeDescription();
+            }}
+            className="space-y-4"
+          >
+            <div className="relative">
+              <Textarea
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="Describe what happened or symptoms present..."
+                className="w-full min-h-[140px] rounded-2xl border-white/[0.08] bg-white/[0.02] text-white placeholder:text-zinc-600 focus:border-purple-500/30 focus:ring-0 resize-none text-sm leading-relaxed"
+                rows={5}
+              />
+              {description.length > 0 && (
+                <div className="absolute bottom-3 right-3 text-[10px] text-zinc-600">
+                  {description.length} chars
                 </div>
-                <Button
-                  type="submit"
-                  className="w-full py-4 text-lg font-medium"
-                  disabled={isAnalyzing || !description.trim()}
-                >
-                  {isAnalyzing ? "Analyzing..." : "Get Triage Assessment"}
-                </Button>
-              </form>
-
-              {result && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.2 }}
-                >
-                  <Card className="border-border">
-                    <CardHeader className="pb-4">
-                      <div className="flex items-center space-x-4">
-                        {result.severity === "Critical" ? (
-                          <AlertTriangle className="h-6 w-6 text-red-400" />
-                        ) : result.severity === "High" ? (
-                          <AlertTriangle className="h-6 w-6 text-orange-400" />
-                        ) : result.severity === "Medium" ? (
-                          <Activity className="h-6 w-6 text-yellow-400" />
-                        ) : (
-                          <CheckCircle2 className="h-6 w-6 text-green-400" />
-                        )}
-                        <div>
-                          <h2 className="text-2xl font-bold text-white">
-                            Assessment: {result.severity}
-                          </h2>
-                          <p className="text-zinc-300 mt-2">
-                            This is an automated assessment. Always follow emergency services instructions.
-                          </p>
-                        </div>
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <h3 className="font-semibold text-zinc-200 mb-4">Immediate Steps:</h3>
-                      <div className="space-y-3">
-                        {result.steps.map((step, index) => (
-                          <motion.div
-                            key={index}
-                            initial={{ opacity: 0, x: -10 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ duration: 0.4, delay: index * 0.08 }}
-                          >
-                            <div className="flex items-start space-x-4">
-                              <CheckCircle2 className="h-4 w-4 mt-1 text-primary flex-shrink-0" />
-                              <p className="text-zinc-300">{step}</p>
-                            </div>
-                          </motion.div>
-                        ))}
-                      </div>
-                    </CardContent>
-                  </Card>
-                </motion.div>
               )}
-            </motion.div>
-          </div>
-        </main>
-      </div>
-    </motion.div>
-  );
-}
+            </div>
+            <Button
+              type="submit"
+              className="w-full h-11 bg-white text-zinc-950 hover:bg-white/90 font-medium"
+              disabled={isAnalyzing || !description.trim()}
+            >
+              {isAnalyzing ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Analyzing...
+                </>
+              ) : (
+                <>
+                  <Brain className="h-4 w-4 mr-2" />
+                  Get Assessment
+                </>
+              )}
+            </Button>
+          </form>
+        </motion.div>
 
-// Reusable ArrowLeft icon
-function ArrowLeft({ className }: { className?: string }) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-      strokeWidth={1.5}
-      stroke="currentColor"
-      className={className}
-    >
-      <path strokeLinecap="round" strokeLinejoin="round" d="M15 18l-6-6 6-6" />
-    </svg>
+        {/* Result */}
+        <AnimatePresence>
+          {result && config && (
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.4 }}
+              className="mt-8"
+            >
+              {/* AI Assessment Header */}
+              <div className="flex items-center gap-2 mb-4">
+                <div className="w-6 h-6 rounded-md bg-purple-500/10 flex items-center justify-center">
+                  <Brain className="h-3 w-3 text-purple-400" />
+                </div>
+                <span className="text-xs font-medium text-purple-400 uppercase tracking-wider">AI Assessment</span>
+                <span className="text-xs text-zinc-600">Complete</span>
+              </div>
+
+              {/* Severity Badge */}
+              <div className={`inline-flex items-center gap-2.5 px-4 py-2 rounded-xl ${config.bg} border ${config.border} mb-5`}>
+                <config.icon className={`h-5 w-5 ${config.color}`} />
+                <div>
+                  <span className={`text-sm font-semibold ${config.color}`}>Severity: {result.severity}</span>
+                </div>
+              </div>
+
+              <div className="p-4 rounded-xl border border-white/[0.06] bg-white/[0.02] mb-5">
+                <div className="flex items-center gap-2 mb-2">
+                  <Shield className="h-4 w-4 text-zinc-400" />
+                  <span className="text-xs font-medium text-zinc-400">Recommended Response</span>
+                </div>
+                <p className="text-sm text-white font-medium">
+                  {result.severity === "Critical" && "Immediate medical attention required"}
+                  {result.severity === "High" && "Urgent medical attention recommended"}
+                  {result.severity === "Medium" && "Medical evaluation suggested"}
+                  {result.severity === "Low" && "Monitor and provide basic care"}
+                </p>
+              </div>
+
+              <h3 className="text-xs font-medium text-zinc-500 uppercase tracking-wider mb-3">Assessment Steps</h3>
+              <p className="text-xs text-zinc-600 mb-4">This is an automated assessment. Always follow emergency services instructions.</p>
+
+              {/* Steps */}
+              <div className="space-y-2">
+                {result.steps.map((step, i) => (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, x: -8 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.3, delay: i * 0.06 }}
+                    className="flex items-start gap-3 p-3.5 rounded-xl border border-white/[0.06] bg-white/[0.02]"
+                  >
+                    <span className="flex-shrink-0 w-6 h-6 rounded-lg bg-white/[0.06] flex items-center justify-center text-[10px] font-mono text-zinc-500">
+                      {i + 1}
+                    </span>
+                    <p className="text-sm text-zinc-300 leading-relaxed">{step}</p>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </main>
+    </div>
   );
 }
